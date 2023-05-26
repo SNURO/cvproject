@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VG_DIR=/gallery_tate/wonjae.roh/vg
+VG_DIR=~/blip2_dataset/vg
 mkdir -p $VG_DIR
 
 wget https://cs.stanford.edu/people/rak248/VG_100K_2/images.zip -O $VG_DIR/images.zip
