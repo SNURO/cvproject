@@ -1,2 +1,1 @@
-from lavis.models import model_zoo
-print(model_zoo)
+print(int("2f34bb38723c3ad5d5142091be91a846"))

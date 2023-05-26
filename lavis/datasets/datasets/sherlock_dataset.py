@@ -31,6 +31,8 @@ class SherlockDataset(BaseDataset):
         self.vis_processor = vis_processor
         self.text_processor = text_processor
 
+        self._add_instance_ids(key="simple_id") # because already exists key "instance_id"
+
 
     def __getitem__(self, index):
 
@@ -53,7 +55,7 @@ class SherlockDataset(BaseDataset):
         return {
             "image": image,
             "text_input": caption,
-            "image_id": ann["inputs"]["obs_idx"],   #복잡한거 -> 정수 바꿔서 주므로 간단한거
+            "image_id": ann["simple_id"],   #복잡한거 -> 정수 바꿔서 주므로 간단한거
         }
     
     def highlight_region(self, image, bboxes):
@@ -77,7 +79,16 @@ class SherlockEvalDataset(CaptionEvalDataset):
         ann_root (string): directory to store the annotation file
         split (string): val or test
         """
-        super().__init__(vis_processor, text_processor, vis_root, ann_paths)
+        self.vis_root = vis_root
+
+        self.annotation = []
+        for ann_path in ann_paths:
+            self.annotation.extend(json.load(open(ann_path, "r")))
+
+        self.vis_processor = vis_processor
+        self.text_processor = text_processor
+
+        self._add_instance_ids(key="simple_id") # because already exists key "instance_id"
 
     def __getitem__(self, index):
         
@@ -98,8 +109,8 @@ class SherlockEvalDataset(CaptionEvalDataset):
 
         return {
             "image": image,
-            "image_id": ann["instance_id"], #복잡
-            "instance_id": ann["split_idx"],    #간단한 정수
+            "image_id": int(ann["instance_id"],16), #복잡
+            "instance_id": ann["simple_id"],    #간단한 정수
         }
     
     def highlight_region(self, image, bboxes):
