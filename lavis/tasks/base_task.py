@@ -52,7 +52,7 @@ class BaseTask:
 
         for name in datasets_config:
             dataset_config = datasets_config[name]
-
+            
             builder = registry.get_builder_class(name)(dataset_config)
             dataset = builder.build_datasets()
 
