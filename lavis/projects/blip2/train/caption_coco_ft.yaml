@@ -27,7 +27,7 @@ datasets:
           name: "blip_caption"
     build_info:
         images:
-          storage: '~/blip2_dataset/coco'
+          storage: '/home/soojinwoo/blip2_dataset/coco'
 
 run:
   task: captioning

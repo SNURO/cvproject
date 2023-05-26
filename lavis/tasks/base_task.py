@@ -15,8 +15,7 @@ from lavis.common.logger import MetricLogger, SmoothedValue
 from lavis.common.registry import registry
 from lavis.datasets.data_utils import prepare_sample
 
-import ipdb 
-
+import ipdb
 
 class BaseTask:
     def __init__(self, **kwargs):

@@ -7,4 +7,4 @@ env:
   # For default users
   # cache_root: "cache"
   # For internal use with persistent storage
-  cache_root: "~/blip2_dataset/.cache/lavis"
+  cache_root: "/home/soojinwoo/blip2_dataset/.cache/lavis"
