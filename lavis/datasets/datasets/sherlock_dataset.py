@@ -110,7 +110,8 @@ class SherlockEvalDataset(CaptionEvalDataset):
 
         return {
             "image": image,
-            "image_id": int(ann["instance_id"], 16),  # 복잡
+            # "image_id": int(ann["instance_id"], 16),  # 복잡
+            "image_id": ans["simple_id"],
             "instance_id": ann["simple_id"],  # 간단한 정수
         }
 
