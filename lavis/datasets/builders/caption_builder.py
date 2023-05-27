@@ -71,6 +71,7 @@ class VATEXCapBuilder(BaseDatasetBuilder):
         "default": "configs/datasets/vatex/defaults_cap.yaml",
     }
 
+
 @registry.register_builder("sherlock_caption")
 class SherlockCapBuilder(BaseDatasetBuilder):
     train_dataset_cls = SherlockDataset
