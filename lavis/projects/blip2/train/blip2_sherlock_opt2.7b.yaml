@@ -61,7 +61,7 @@ run:
   batch_size_train: 8
   batch_size_eval: 8
   num_workers: 4
-  accum_grad_iters: 1
+  accum_grad_iters: 2
 
   max_len: 30
   min_len: 8
