@@ -27,7 +27,7 @@ datasets:
           name: "blip_caption"
     build_info:
         images:
-          storage: '/gallery_tate/wonjae.roh/coco'
+          storage: '/net/nfs.cirrascale/mosaic/seungjuh//coco'
 
 run:
   task: captioning
