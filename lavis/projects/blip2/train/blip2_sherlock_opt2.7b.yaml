@@ -6,24 +6,27 @@
 model:
   arch: blip2_opt
   model_type: caption_coco_opt2.7b
-#  arch: caption_coco_opt2.7b
-  load_finetuned: True
-
-  pretrained: "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_pretrained_opt2.7b.pth"
-  finetuned: "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_caption_opt2.7b.pth"
-
-  # vit encoder
-  image_size: 364
-  drop_path_rate: 0
-  use_grad_checkpoint: False
-  vit_precision: "fp32"
+  load_finetuned: False
+  use_grad_checkpoint: True
   freeze_vit: False
-
-  # Q-Former
-  num_query_token: 32
-
-  # OPT
-  opt_model: "facebook/opt-2.7b"
+#  arch: caption_coco_opt2.7b
+#  load_finetuned: True
+#
+#  pretrained: "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_pretrained_opt2.7b.pth"
+#  finetuned: "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_caption_opt2.7b.pth"
+#
+#  # vit encoder
+#  image_size: 364
+#  drop_path_rate: 0
+#  use_grad_checkpoint: False
+#  vit_precision: "fp32"
+#  freeze_vit: False
+#
+#  # Q-Former
+#  num_query_token: 32
+#
+#  # OPT
+#  opt_model: "facebook/opt-2.7b"
 
 #  # generation configs
 #  prompt: "a photo of"
