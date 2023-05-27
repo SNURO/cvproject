@@ -47,6 +47,7 @@ run:
   max_len: 30
   min_len: 8
   num_beams: 5
+  report_metric: False
 
   seed: 42
   output_dir: "output/BLIP2/Caption_sherlock"
