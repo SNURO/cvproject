@@ -19,6 +19,8 @@ VG_DIR=/gallery_tate/wonjae.roh/vg
 Sherlock_DIR=/gallery_tate/wonjae.roh/sherlock_dataset
 # "/gallery_tate/wonjae.roh" 까지에 해당하는 부분을 모든 이미지 및 json 파일의 root가 되도록 설정해 주세요
 mkdir -p $VG_DIR
+mkdir -p $VCR_DIR
+mkdir -p $Sherlock_DIR
 
 wget https://storage.googleapis.com/ai2-mosaic-public/projects/sherlock/data/sherlock_train_v1_1.json.zip -O $Sherlock_DIR/sherlock_train_v1_1.json.zip
 wget https://storage.googleapis.com/ai2-mosaic-public/projects/sherlock/data/sherlock_val_with_split_idxs_v1_1.json.zip -O $Sherlock_DIR/sherlock_val_with_split_idxs_v1_1.json.zip
