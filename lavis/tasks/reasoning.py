@@ -138,8 +138,8 @@ class ReasonTask(BaseTask):
         bleu1_score = bleu1_scorer.compute_score(gt_inference, pred_inference)[0]
         bleu2_score = bleu2_scorer.compute_score(gt_inference, pred_inference)[0]
         bleu3_score = bleu3_scorer.compute_score(gt_inference, pred_inference)[0]
-        return {
+        return {'agg_metrics': {
             'bleu1': bleu1_score,
             'bleu2': bleu2_score,
             'bleu3': bleu3_score,
-        }
+        }}
