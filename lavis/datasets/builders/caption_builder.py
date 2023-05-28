@@ -88,5 +88,5 @@ class SherlockCapDebugBuilder(BaseDatasetBuilder):
     eval_dataset_cls = SherlockEvalDebugDataset
 
     DATASET_CONFIG_DICT = {
-        "default": "configs/datasets/sherlock/sherlock_1.yaml",
+        "default": "configs/datasets/sherlock/sherlock_debug.yaml",
     }
