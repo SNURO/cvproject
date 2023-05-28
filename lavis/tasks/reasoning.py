@@ -103,8 +103,6 @@ class ReasonTask(BaseTask):
             eval_image_id_to_clue[i] = clue
             eval_image_id_to_inference[i] = inference
 
-        bleu1_scorer = Bleu(1)
-        bleu2_scorer = Bleu(2)
         bleu3_scorer = Bleu(3)
 
         pred_inference = {}
@@ -135,15 +133,10 @@ class ReasonTask(BaseTask):
             gt_inference[i] = [eval_inference]
             gt_clue[i] = [eval_clue]
 
-        bleu1_score = bleu1_scorer.compute_score(gt_inference, pred_inference)[0]
-        print(bleu1_score)
-        bleu2_score = bleu2_scorer.compute_score(gt_inference, pred_inference)[0]
-        print(bleu2_score)
         bleu3_score = bleu3_scorer.compute_score(gt_inference, pred_inference)[0]
-        print(bleu3_score)
         return {
-            'bleu1': bleu1_score,
-            'bleu2': bleu2_score,
-            'bleu3': bleu3_score,
-            'agg_metrics': bleu1_score,
+            'bleu1': bleu3_score[0],
+            'bleu2': bleu3_score[1],
+            'bleu3': bleu3_score[2],
+            'agg_metrics': bleu3_score[0]
         }
