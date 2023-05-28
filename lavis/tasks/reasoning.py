@@ -136,8 +136,11 @@ class ReasonTask(BaseTask):
             gt_clue[i] = [eval_clue]
 
         bleu1_score = bleu1_scorer.compute_score(gt_inference, pred_inference)[0]
+        print(bleu1_score)
         bleu2_score = bleu2_scorer.compute_score(gt_inference, pred_inference)[0]
+        print(bleu2_score)
         bleu3_score = bleu3_scorer.compute_score(gt_inference, pred_inference)[0]
+        print(bleu3_score)
         return {
             'bleu1': bleu1_score,
             'bleu2': bleu2_score,
