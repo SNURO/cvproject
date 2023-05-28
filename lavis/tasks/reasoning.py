@@ -7,6 +7,9 @@
 
 import json
 import os
+import re
+
+from pycocoevalcap.bleu.bleu import Bleu
 
 from lavis.common.dist_utils import main_process
 from lavis.common.registry import registry
@@ -82,19 +85,61 @@ class ReasonTask(BaseTask):
     @main_process
     def _report_metrics(self, eval_result_file, split_name):
 
-        # TODO better way to define this
-        coco_gt_root = os.path.join(registry.get_path("cache_root"), "coco_gt")
-        coco_val = coco_caption_eval(coco_gt_root, eval_result_file, split_name)
+        sherlock_root = '/net/nfs.cirrascale/mosaic/seungjuh/sherlock_dataset'
+        sherlock_eval_file = os.path.join(sherlock_root, 'sherlock_val_with_split_idxs_v1_1.json')
 
-        agg_metrics = coco_val.eval["CIDEr"] + coco_val.eval["Bleu_4"]
-        log_stats = {split_name: {k: v for k, v in coco_val.eval.items()}}
+        with open(sherlock_eval_file, 'r') as f:
+            sherlock_eval = json.load(f)
 
-        with open(
-            os.path.join(registry.get_path("output_dir"), "evaluate.txt"), "a"
-        ) as f:
-            f.write(json.dumps(log_stats) + "\n")
+        with open(eval_result_file, 'r') as f:
+            eval_result = json.load(f)
 
-        coco_res = {k: v for k, v in coco_val.eval.items()}
-        coco_res["agg_metrics"] = agg_metrics
+        eval_image_id_to_inference = {}
+        eval_image_id_to_clue = {}
 
-        return coco_res
+        for i, d in enumerate(sherlock_eval):
+            inference = d['targets']['inference']
+            clue = d['inputs']['clue']
+            eval_image_id_to_clue[i] = clue
+            eval_image_id_to_inference[i] = inference
+
+        bleu1_scorer = Bleu(1)
+        bleu2_scorer = Bleu(2)
+        bleu3_scorer = Bleu(3)
+
+        pred_inference = {}
+        pred_clue = {}
+        gt_inference = {}
+        gt_clue = {}
+
+        for i, result in enumerate(eval_result):
+            img_id = result['image_id']
+            caption = result['caption']
+            # ex: caption = 'Clue: xxx, Inference: xxx'
+            inference = re.findall(r'Inference: (.*)', caption)
+            if len(inference) == 0:
+                inference = ''
+            else:
+                inference = inference[0]
+            clue = re.findall(r'Clue: (.*)', caption)
+            if len(clue) == 0:
+                clue = ''
+            else:
+                clue = clue[0]
+
+            pred_inference[i] = [inference]
+            pred_clue[i] = [clue]
+
+            eval_clue = eval_image_id_to_clue[int(img_id)]
+            eval_inference = eval_image_id_to_inference[int(img_id)]
+            gt_inference[i] = [eval_inference]
+            gt_clue[i] = [eval_clue]
+
+        bleu1_score = bleu1_scorer.compute_score(gt_inference, pred_inference)[0]
+        bleu2_score = bleu2_scorer.compute_score(gt_inference, pred_inference)[0]
+        bleu3_score = bleu3_scorer.compute_score(gt_inference, pred_inference)[0]
+        return {
+            'bleu1': bleu1_score,
+            'bleu2': bleu2_score,
+            'bleu3': bleu3_score,
+        }
