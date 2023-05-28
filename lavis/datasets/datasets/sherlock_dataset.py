@@ -128,3 +128,44 @@ class SherlockEvalDataset(CaptionEvalDataset):
         image = Image.alpha_composite(image, overlay)
         convert_to_RGB = image.convert('RGB')  # TODO test
         return convert_to_RGB
+
+
+class SherlockDebugDataset(SherlockDataset):
+    def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
+        """
+        vis_root (string): Root directory of images (e.g. coco/images/)
+        ann_root (string): directory to store the annotation file
+        """
+        self.vis_root = vis_root
+
+        self.annotation = []
+        for ann_path in ann_paths:
+            self.annotation.extend(json.load(open(ann_path, "r")))
+
+        self.annotation = self.annotation[:100]
+
+        self.vis_processor = vis_processor
+        self.text_processor = text_processor
+
+        self._add_instance_ids(key="simple_id")  # because already exists key "instance_id"
+
+
+class SherlockEvalDebugDataset(SherlockEvalDataset):
+    def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
+        """
+        vis_root (string): Root directory of images (e.g. coco/images/)
+        ann_root (string): directory to store the annotation file
+        split (string): val or test
+        """
+        self.vis_root = vis_root
+
+        self.annotation = []
+        for ann_path in ann_paths:
+            self.annotation.extend(json.load(open(ann_path, "r")))
+
+        self.annotation = self.annotation[:100]
+
+        self.vis_processor = vis_processor
+        self.text_processor = text_processor
+
+        self._add_instance_ids(key="simple_id")  # because already exists key "instance_id"
