@@ -30,8 +30,8 @@ datasets:
           storage: '/net/nfs.cirrascale/mosaic/seungjuh/'
 
 run:
-#  task: reasoning
-  task: captioning
+  task: reasoning
+#  task: captioning
   # optimizer
   lr_sched: "linear_warmup_cosine_lr"
   init_lr: 1e-5
@@ -60,7 +60,6 @@ run:
   evaluate: False
   train_splits: ["train"]
   valid_splits: ["val"]
-  test_splits: ["test"]
 
   device: "cuda"
   world_size: 1
