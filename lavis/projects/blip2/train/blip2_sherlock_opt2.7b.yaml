@@ -10,6 +10,9 @@ model:
   use_grad_checkpoint: True
   freeze_vit: False
 
+  # generation configs
+  prompt: "Inference: "
+
 datasets:
   sherlock_caption: # name of the dataset builder
     vis_processor:

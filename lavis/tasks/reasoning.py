@@ -114,16 +114,20 @@ class ReasonTask(BaseTask):
             img_id = result['image_id']
             caption = result['caption']
             # ex: caption = 'Clue: xxx, Inference: xxx'
-            inference = re.findall(r'Inference: (.*)', caption)
-            if len(inference) == 0:
-                inference = ''
+            if 'Inference: ' in caption:
+                inference = re.findall(r'Inference: (.*)', caption)
+                if len(inference) == 0:
+                    inference = ''
+                else:
+                    inference = inference[0]
+                clue = re.findall(r'Clue: (.*)', caption)
+                if len(clue) == 0:
+                    clue = ''
+                else:
+                    clue = clue[0]
             else:
-                inference = inference[0]
-            clue = re.findall(r'Clue: (.*)', caption)
-            if len(clue) == 0:
+                inference = caption.strip()
                 clue = ''
-            else:
-                clue = clue[0]
 
             pred_inference[i] = [inference]
             pred_clue[i] = [clue]
