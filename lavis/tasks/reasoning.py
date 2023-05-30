@@ -85,7 +85,7 @@ class ReasonTask(BaseTask):
     @main_process
     def _report_metrics(self, eval_result_file, split_name):
 
-        sherlock_root = '/gallery_tate/wonjae.roh/sherlock_dataset'
+        sherlock_root = '/net/nfs.cirrascale/mosaic/seungjuh/sherlock_dataset'
         sherlock_eval_file = os.path.join(sherlock_root, 'sherlock_val_with_split_idxs_v1_1.json')
 
         with open(sherlock_eval_file, 'r') as f:
@@ -115,16 +115,24 @@ class ReasonTask(BaseTask):
             caption = result['caption']
             # ex: caption = 'Clue: xxx, Inference: xxx'
             if 'Inference: ' in caption:
-                inference = re.findall(r'Inference: (.*)', caption)
-                if len(inference) == 0:
-                    inference = ''
+                if 'Clue: ' in caption:
+                    inference = re.findall(r'Inference: (.*)', caption)
+                    if len(inference) == 0:
+                        inference = ''
+                    else:
+                        inference = inference[0]
+                    clue = re.findall(r'Clue: (.*)', caption)
+                    if len(clue) == 0:
+                        clue = ''
+                    else:
+                        clue = clue[0]
                 else:
-                    inference = inference[0]
-                clue = re.findall(r'Clue: (.*)', caption)
-                if len(clue) == 0:
-                    clue = ''
-                else:
-                    clue = clue[0]
+                    inference = re.findall(r'Inference: (.*)', caption)
+                    if len(inference) == 0:
+                        inference = ''
+                    else:
+                        inference = inference[0]
+                    clue = caption.split('Inference:')[0]
             else:
                 inference = caption.strip()
                 clue = ''
@@ -138,9 +146,14 @@ class ReasonTask(BaseTask):
             gt_clue[i] = [eval_clue]
 
         bleu3_score = bleu3_scorer.compute_score(gt_inference, pred_inference)[0]
+        clue_bleu3_score = bleu3_scorer.compute_score(gt_clue, pred_clue)[0]
+
         return {
-            'bleu1': bleu3_score[0],
-            'bleu2': bleu3_score[1],
-            'bleu3': bleu3_score[2],
+            'clue_bleu1': clue_bleu3_score[0],
+            'clue_bleu2': clue_bleu3_score[1],
+            'clue_bleu3': clue_bleu3_score[2],
+            'inference_bleu1': bleu3_score[0],
+            'inference_bleu2': bleu3_score[1],
+            'inference_bleu3': bleu3_score[2],
             'agg_metrics': bleu3_score[0]
         }
