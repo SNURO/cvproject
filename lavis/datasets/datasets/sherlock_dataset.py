@@ -66,9 +66,15 @@ class SherlockDataset(BaseDataset):
         else:
             caption = self.text_processor(ann["targets"]["inference"])
 
+        if self.mode == "clueinference":
+            clue = self.text_processor(ann["inputs"]["clue"], "")
+        else:
+            clue = self.text_processor(ann["inputs"]["clue"]) # not used
+
         return {
             "image": image,
             "text_input": caption,
+            "text_clue" : clue,
             "image_id": ann["simple_id"],  # 복잡한거 -> 정수 바꿔서 주므로 간단한거
         }
 
