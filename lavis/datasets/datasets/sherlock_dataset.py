@@ -5,18 +5,16 @@
  For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 """
 
-import os
 import json
+import os
 
 from PIL import Image, ImageDraw
 from PIL import ImageFile
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-from lavis.datasets.datasets.caption_datasets import CaptionDataset, CaptionEvalDataset
+from lavis.datasets.datasets.caption_datasets import CaptionEvalDataset
 from lavis.datasets.datasets.base_dataset import BaseDataset
-
-import ipdb
 
 
 class SherlockDataset(BaseDataset):
@@ -30,8 +28,6 @@ class SherlockDataset(BaseDataset):
         self.annotation = []
         for ann_path in ann_paths:
             self.annotation.extend(json.load(open(ann_path, "r")))
-
-        self.annotation = self.annotation[:100]
 
         self.vis_processor = vis_processor
         self.text_processor = text_processor
@@ -99,8 +95,6 @@ class SherlockEvalDataset(CaptionEvalDataset):
         self.annotation = []
         for ann_path in ann_paths:
             self.annotation.extend(json.load(open(ann_path, "r")))
-
-        self.annotation = self.annotation[:100]
 
         self.vis_processor = vis_processor
         self.text_processor = text_processor
