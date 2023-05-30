@@ -423,3 +423,78 @@ class Blip2OPT(Blip2Base):
         model.load_checkpoint_from_config(cfg)
 
         return model
+    
+
+@registry.register_model("blip2_opt_instruct")
+class Blip2OPTInstruct(Blip2OPT):
+
+    PRETRAINED_MODEL_CONFIG_DICT = {
+        "pretrain_opt2.7b": "configs/models/blip2/blip2_pretrain_opt2.7b.yaml",
+        "pretrain_opt6.7b": "configs/models/blip2/blip2_pretrain_opt6.7b.yaml",
+        "caption_coco_opt2.7b": "configs/models/blip2/blip2_caption_opt2.7b.yaml",
+        "caption_coco_opt6.7b": "configs/models/blip2/blip2_caption_opt6.7b.yaml",
+    }
+
+    def __init__(
+        self,
+        vit_model="eva_clip_g",
+        img_size=224,
+        drop_path_rate=0,
+        use_grad_checkpoint=False,
+        vit_precision="fp16",
+        freeze_vit=True,
+        num_query_token=32,
+        opt_model="facebook/opt-2.7b",
+        prompt="",
+        max_txt_len=32,
+        apply_lemmatizer=False,
+    ):
+        super().__init__(
+        vit_model=vit_model,
+        img_size=img_size,
+        drop_path_rate=drop_path_rate,
+        use_grad_checkpoint=use_grad_checkpoint,
+        vit_precision=vit_precision,
+        freeze_vit=freeze_vit,
+        num_query_token=num_query_token,
+        opt_model=opt_model,
+        prompt=prompt,
+        max_txt_len=max_txt_len,
+        apply_lemmatizer=apply_lemmatizer,
+        )
+
+    @classmethod
+    def from_config(cls, cfg):
+        vit_model = cfg.get("vit_model", "eva_clip_g")
+        img_size = cfg.get("image_size")
+        num_query_token = cfg.get("num_query_token")
+        opt_model = cfg.get("opt_model")
+
+        drop_path_rate = cfg.get("drop_path_rate", 0)
+        use_grad_checkpoint = cfg.get("use_grad_checkpoint", False)
+        vit_precision = cfg.get("vit_precision", "fp16")
+        freeze_vit = cfg.get("freeze_vit", True)
+
+        prompt = cfg.get("prompt", "")
+        max_txt_len = cfg.get("max_txt_len", 32)
+        
+        apply_lemmatizer = cfg.get("apply_lemmatizer", False)
+
+        model = cls(
+            vit_model=vit_model,
+            img_size=img_size,
+            drop_path_rate=drop_path_rate,
+            use_grad_checkpoint=use_grad_checkpoint,
+            vit_precision=vit_precision,
+            freeze_vit=freeze_vit,
+            num_query_token=num_query_token,
+            opt_model=opt_model,
+            prompt=prompt,
+            max_txt_len=max_txt_len,
+            apply_lemmatizer=apply_lemmatizer,
+        )
+        model.load_checkpoint_from_config(cfg)
+
+        return model
+        
+    #def forward(self, samples):

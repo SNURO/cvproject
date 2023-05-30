@@ -31,7 +31,7 @@ class SherlockDataset(BaseDataset):
         for ann_path in ann_paths:
             self.annotation.extend(json.load(open(ann_path, "r")))
 
-        #self.annotation = self.annotation[:100]
+        self.annotation = self.annotation[:100]
 
         self.vis_processor = vis_processor
         self.text_processor = text_processor
@@ -100,7 +100,7 @@ class SherlockEvalDataset(CaptionEvalDataset):
         for ann_path in ann_paths:
             self.annotation.extend(json.load(open(ann_path, "r")))
 
-        #self.annotation = self.annotation[:100]
+        self.annotation = self.annotation[:100]
 
         self.vis_processor = vis_processor
         self.text_processor = text_processor

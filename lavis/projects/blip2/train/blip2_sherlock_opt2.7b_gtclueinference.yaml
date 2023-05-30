@@ -4,11 +4,11 @@
  # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 
 model:
-  arch: blip2_opt
+  arch: blip2_opt_instruct
   model_type: caption_coco_opt2.7b
   load_finetuned: False
   use_grad_checkpoint: True
-  freeze_vit: False # set to false if enough vRAM
+  freeze_vit: True # set to false if enough vRAM
 
   # generation configs
   prompt: "Clue: "
