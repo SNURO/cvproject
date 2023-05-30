@@ -85,7 +85,7 @@ class ReasonTask(BaseTask):
     @main_process
     def _report_metrics(self, eval_result_file, split_name):
 
-        sherlock_root = '/net/nfs.cirrascale/mosaic/seungjuh/sherlock_dataset'
+        sherlock_root = '/gallery_tate/wonjae.roh/sherlock_dataset'
         sherlock_eval_file = os.path.join(sherlock_root, 'sherlock_val_with_split_idxs_v1_1.json')
 
         with open(sherlock_eval_file, 'r') as f:

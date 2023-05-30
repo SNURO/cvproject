@@ -30,7 +30,7 @@ datasets:
           name: "blip_caption"
     build_info:
         images:
-          storage: '/net/nfs.cirrascale/mosaic/seungjuh/'
+          storage: '/gallery_tate/wonjae.roh/'
 
 run:
   task: reasoning

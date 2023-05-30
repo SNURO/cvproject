@@ -8,10 +8,13 @@ model:
   model_type: caption_coco_opt2.7b
   load_finetuned: False
   use_grad_checkpoint: True
-  freeze_vit: False
+  freeze_vit: True # set to false if enough vRAM
+
+  # generation configs
+  prompt: "Clue: "
 
 datasets:
-  sherlock_caption_debug: # name of the dataset builder
+  sherlock_caption: # name of the dataset builder
     vis_processor:
         train:
           name: "blip2_image_train"
@@ -21,8 +24,7 @@ datasets:
           image_size: 364
     text_processor:
         train:
-          name: "blip_caption"
-          prompt: "Inference: "
+          name: "blip_caption"  # "Clue:XXX, Inference:XXX prompts are internally given by custom text_processor"
         eval:
           name: "blip_caption"
     build_info:
