@@ -16,6 +16,8 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 from lavis.datasets.datasets.caption_datasets import CaptionDataset, CaptionEvalDataset
 from lavis.datasets.datasets.base_dataset import BaseDataset
 
+import ipdb
+
 
 class SherlockDataset(BaseDataset):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
@@ -29,8 +31,16 @@ class SherlockDataset(BaseDataset):
         for ann_path in ann_paths:
             self.annotation.extend(json.load(open(ann_path, "r")))
 
+        #self.annotation = self.annotation[:100]
+
         self.vis_processor = vis_processor
         self.text_processor = text_processor
+
+        if self.text_processor.__class__.__name__ == "BlipClueinferenceProcessor":  
+            self.mode = "clueinference"
+        else:
+            self.mode = "inference"
+
 
         self._add_instance_ids(key="simple_id")  # because already exists key "instance_id"
 
@@ -50,7 +60,11 @@ class SherlockDataset(BaseDataset):
         image = self.highlight_region(image, ann["inputs"]["bboxes"])
 
         image = self.vis_processor(image)
-        caption = self.text_processor(ann["targets"]["inference"])
+
+        if self.mode == "clueinference":
+            caption = self.text_processor(ann["inputs"]["clue"], ann["targets"]["inference"])
+        else:
+            caption = self.text_processor(ann["targets"]["inference"])
 
         return {
             "image": image,
@@ -86,8 +100,15 @@ class SherlockEvalDataset(CaptionEvalDataset):
         for ann_path in ann_paths:
             self.annotation.extend(json.load(open(ann_path, "r")))
 
+        #self.annotation = self.annotation[:100]
+
         self.vis_processor = vis_processor
         self.text_processor = text_processor
+
+        if self.text_processor.__class__.__name__ == "BlipClueinferenceProcessor":  
+            self.mode = "clueinference"
+        else:
+            self.mode = "inference"
 
         self._add_instance_ids(key="simple_id")  # because already exists key "instance_id"
 

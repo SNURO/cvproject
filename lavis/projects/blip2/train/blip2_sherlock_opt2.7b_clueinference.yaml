@@ -24,7 +24,9 @@ datasets:
           image_size: 364
     text_processor:
         train:
-          name: "blip_caption"  # "Clue:XXX, Inference:XXX prompts are internally given by custom text_processor"
+          name: "blip_clueinference"  # "Clue:XXX, Inference:XXX prompts are internally given by custom text_processor"
+          prompt1: "Clue: "
+          prompt2: "Inference: "
         eval:
           name: "blip_caption"
     build_info:
@@ -66,4 +68,4 @@ run:
   device: "cuda"
   world_size: 1
   dist_url: "env://"
-  distributed: True
+  distributed: False

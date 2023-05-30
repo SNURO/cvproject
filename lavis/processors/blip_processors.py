@@ -66,6 +66,51 @@ class BlipCaptionProcessor(BaseProcessor):
             caption = " ".join(caption_words[: self.max_words])
 
         return caption
+    
+
+@registry.register_processor("blip_clueinference")
+class BlipClueinferenceProcessor(BaseProcessor):
+    def __init__(self, prompt1="Clue: ", prompt2="Inference: ", max_words=50):
+        self.prompt1 = prompt1
+        self.prompt2 = prompt2
+        self.max_words = max_words
+
+    def __call__(self, caption1, caption2):
+        caption = self.prompt1 + self.pre_caption(caption1) + " " + self.prompt2 + self.pre_caption(caption2)
+
+        return caption
+
+    @classmethod
+    def from_config(cls, cfg=None):
+        if cfg is None:
+            cfg = OmegaConf.create()
+
+        prompt1 = cfg.get("prompt1", "")
+        prompt2 = cfg.get("prompt2", "")
+        max_words = cfg.get("max_words", 50)
+
+        return cls(prompt1=prompt1, prompt2=prompt2, max_words=max_words)
+
+    def pre_caption(self, caption):
+        caption = re.sub(
+            r"([.!\"()*#:;~])",
+            " ",
+            caption.lower(),
+        )
+        caption = re.sub(
+            r"\s{2,}",
+            " ",
+            caption,
+        )
+        caption = caption.rstrip("\n")
+        caption = caption.strip(" ")
+
+        # truncate caption
+        caption_words = caption.split(" ")
+        if len(caption_words) > self.max_words:
+            caption = " ".join(caption_words[: self.max_words])
+
+        return caption
 
 
 @registry.register_processor("blip_question")

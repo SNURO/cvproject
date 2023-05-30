@@ -45,7 +45,7 @@ print("------------------------------------------------------------")
 print(model.generate({"image": image}, use_nucleus_sampling=True, num_captions=3))
 print("------------------------------------------------------------")
 
-print(model.generate({"image": image, "prompt": "Question: which city is this? Answer:"}))
+print(model.generate({"image": image, "prompt": "Clue: "}))
 print("------------------------------------------------------------")
 
 print(model.generate({
