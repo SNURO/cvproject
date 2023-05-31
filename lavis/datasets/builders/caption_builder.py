@@ -19,7 +19,7 @@ from lavis.datasets.datasets.video_caption_datasets import (
 )
 from lavis.datasets.datasets.sherlock_dataset import (
     SherlockDataset,
-    SherlockEvalDataset
+    SherlockEvalDataset, SherlockEvalDebugDataset, SherlockDebugDataset
 )
 
 
@@ -79,4 +79,14 @@ class SherlockCapBuilder(BaseDatasetBuilder):
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/sherlock/sherlock_1.yaml",
+    }
+
+
+@registry.register_builder("sherlock_caption_debug")
+class SherlockCapDebugBuilder(BaseDatasetBuilder):
+    train_dataset_cls = SherlockDebugDataset
+    eval_dataset_cls = SherlockEvalDebugDataset
+
+    DATASET_CONFIG_DICT = {
+        "default": "configs/datasets/sherlock/sherlock_debug.yaml",
     }

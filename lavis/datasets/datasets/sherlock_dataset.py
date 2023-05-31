@@ -16,6 +16,8 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 from lavis.datasets.datasets.caption_datasets import CaptionDataset, CaptionEvalDataset
 from lavis.datasets.datasets.base_dataset import BaseDataset
 
+import ipdb
+
 
 class SherlockDataset(BaseDataset):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
@@ -29,8 +31,16 @@ class SherlockDataset(BaseDataset):
         for ann_path in ann_paths:
             self.annotation.extend(json.load(open(ann_path, "r")))
 
+        #self.annotation = self.annotation[:100]
+
         self.vis_processor = vis_processor
         self.text_processor = text_processor
+
+        if self.text_processor.__class__.__name__ == "BlipClueinferenceProcessor":  
+            self.mode = "clueinference"
+        else:
+            self.mode = "inference"
+
 
         self._add_instance_ids(key="simple_id")  # because already exists key "instance_id"
 
@@ -50,11 +60,21 @@ class SherlockDataset(BaseDataset):
         image = self.highlight_region(image, ann["inputs"]["bboxes"])
 
         image = self.vis_processor(image)
-        caption = self.text_processor(ann["targets"]["inference"])
+
+        if self.mode == "clueinference":
+            caption = self.text_processor(ann["inputs"]["clue"], ann["targets"]["inference"])
+        else:
+            caption = self.text_processor(ann["targets"]["inference"])
+
+        if self.mode == "clueinference":
+            clue = self.text_processor(ann["inputs"]["clue"], "")
+        else:
+            clue = self.text_processor(ann["inputs"]["clue"]) # not used
 
         return {
             "image": image,
             "text_input": caption,
+            "text_clue" : clue,
             "image_id": ann["simple_id"],  # 복잡한거 -> 정수 바꿔서 주므로 간단한거
         }
 
@@ -86,8 +106,15 @@ class SherlockEvalDataset(CaptionEvalDataset):
         for ann_path in ann_paths:
             self.annotation.extend(json.load(open(ann_path, "r")))
 
+        #self.annotation = self.annotation[:100]
+
         self.vis_processor = vis_processor
         self.text_processor = text_processor
+
+        if self.text_processor.__class__.__name__ == "BlipClueinferenceProcessor":  
+            self.mode = "clueinference"
+        else:
+            self.mode = "inference"
 
         self._add_instance_ids(key="simple_id")  # because already exists key "instance_id"
 
@@ -108,9 +135,21 @@ class SherlockEvalDataset(CaptionEvalDataset):
 
         image = self.vis_processor(image)
 
+        #if self.mode == "clueinference":
+        #    caption = self.text_processor(ann["inputs"]["clue"], ann["targets"]["inference"])
+        #else:
+        #    caption = self.text_processor(ann["targets"]["inference"])
+
+        if self.mode == "clueinference":
+            clue = self.text_processor(ann["inputs"]["clue"], "")
+        else:
+            clue = self.text_processor(ann["inputs"]["clue"]) # not used
+
         return {
             "image": image,
-            "image_id": int(ann["instance_id"], 16),  # 복잡
+            # "image_id": int(ann["instance_id"], 16),  # 복잡
+            "text_clue" : clue,
+            "image_id": ann["simple_id"],
             "instance_id": ann["simple_id"],  # 간단한 정수
         }
 
@@ -127,3 +166,44 @@ class SherlockEvalDataset(CaptionEvalDataset):
         image = Image.alpha_composite(image, overlay)
         convert_to_RGB = image.convert('RGB')  # TODO test
         return convert_to_RGB
+
+
+class SherlockDebugDataset(SherlockDataset):
+    def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
+        """
+        vis_root (string): Root directory of images (e.g. coco/images/)
+        ann_root (string): directory to store the annotation file
+        """
+        self.vis_root = vis_root
+
+        self.annotation = []
+        for ann_path in ann_paths:
+            self.annotation.extend(json.load(open(ann_path, "r")))
+
+        self.annotation = self.annotation[:100]
+
+        self.vis_processor = vis_processor
+        self.text_processor = text_processor
+
+        self._add_instance_ids(key="simple_id")  # because already exists key "instance_id"
+
+
+class SherlockEvalDebugDataset(SherlockEvalDataset):
+    def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
+        """
+        vis_root (string): Root directory of images (e.g. coco/images/)
+        ann_root (string): directory to store the annotation file
+        split (string): val or test
+        """
+        self.vis_root = vis_root
+
+        self.annotation = []
+        for ann_path in ann_paths:
+            self.annotation.extend(json.load(open(ann_path, "r")))
+
+        self.annotation = self.annotation[:100]
+
+        self.vis_processor = vis_processor
+        self.text_processor = text_processor
+
+        self._add_instance_ids(key="simple_id")  # because already exists key "instance_id"
