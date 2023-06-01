@@ -33,7 +33,7 @@ datasets:
           prompt2: "Inference: "
     build_info:
         images:
-          storage: '/gallery_tate/wonjae.roh/'
+          storage: '/net/nfs.cirrascale/mosaic/seungjuh/'
 
 run:
   task: reasoning
