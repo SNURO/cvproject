@@ -8,7 +8,7 @@ model:
   model_type: caption_coco_opt2.7b
   load_finetuned: False
   use_grad_checkpoint: True
-  freeze_vit: True # set to false if enough vRAM
+  freeze_vit: False # set to false if enough vRAM
 
   # generation configs
   prompt: "Clue: "
@@ -28,7 +28,9 @@ datasets:
           prompt1: "Clue: "
           prompt2: "Inference: "
         eval:
-          name: "blip_caption"
+          name: "blip_clueinference"  # "Clue:XXX, Inference:XXX prompts are internally given by custom text_processor"
+          prompt1: "Clue: "
+          prompt2: "Inference: "
     build_info:
         images:
           storage: '/net/nfs.cirrascale/mosaic/seungjuh/'

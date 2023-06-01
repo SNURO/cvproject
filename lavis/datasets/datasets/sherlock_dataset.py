@@ -62,9 +62,15 @@ class SherlockDataset(BaseDataset):
         else:
             caption = self.text_processor(ann["targets"]["inference"])
 
+        if self.mode == "clueinference":
+            clue = self.text_processor(ann["inputs"]["clue"], "")
+        else:
+            clue = self.text_processor(ann["inputs"]["clue"]) # not used
+
         return {
             "image": image,
             "text_input": caption,
+            "text_clue" : clue,
             "image_id": ann["simple_id"],  # 복잡한거 -> 정수 바꿔서 주므로 간단한거
         }
 
@@ -123,9 +129,20 @@ class SherlockEvalDataset(CaptionEvalDataset):
 
         image = self.vis_processor(image)
 
+        #if self.mode == "clueinference":
+        #    caption = self.text_processor(ann["inputs"]["clue"], ann["targets"]["inference"])
+        #else:
+        #    caption = self.text_processor(ann["targets"]["inference"])
+
+        if self.mode == "clueinference":
+            clue = self.text_processor(ann["inputs"]["clue"], "")
+        else:
+            clue = self.text_processor(ann["inputs"]["clue"]) # not used
+
         return {
             "image": image,
             # "image_id": int(ann["instance_id"], 16),  # 복잡
+            "text_clue" : clue,
             "image_id": ann["simple_id"],
             "instance_id": ann["simple_id"],  # 간단한 정수
         }

@@ -21,4 +21,3 @@
 ```bash
 {"train_lr": "0.000", "train_loss": "0.887"}
 {"val_clue_bleu1": 0.30543605678830893, "val_clue_bleu2": 0.19290512864077242, "val_clue_bleu3": 0.13027816848801715, "val_inference_bleu1": 0.21969925665793294, "val_inference_bleu2": 0.13169165678474468, "val_inference_bleu3": 0.08290917445522264, "val_agg_metrics": 0.21969925665793294, "val_best_epoch": 0}
-```
